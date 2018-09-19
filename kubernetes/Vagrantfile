@@ -1,0 +1,53 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+
+servers=[
+  {
+	:hostname => "kube1.gokul.com",
+	:box => "gokulc/kubernetes2",
+	:cpu => 1,
+	:ram => 8096,
+	:ip => "192.168.56.61",
+  },
+  {
+	:hostname => "kube2.gokul.com",
+	:box => "gokulc/kubernetes2",
+	:cpu => 1,
+	:ram => 8096,
+	:ip => "192.168.56.62",
+  },
+  {
+	:hostname => "kube3.gokul.com",
+	:box => "gokulc/kubernetes2",
+	:cpu => 1,
+	:ram => 8096,
+	:ip => "192.168.56.63",
+  },
+  {
+	:hostname => "kube4.gokul.com",
+	:box => "gokulc/kubernetes2",
+	:cpu => 1,
+	:ram => 8096,
+	:ip => "192.168.56.64",
+  },
+  {
+	:hostname => "kube5.gokul.com",
+	:box => "gokulc/kubernetes2",
+	:cpu => 1,
+	:ram => 8096,
+	:ip => "192.168.56.65",
+  }
+]
+Vagrant.configure("2") do |config|
+	servers.each do |machine|
+		config.vm.define machine[:hostname] do |node|
+			node.vm.box = machine[:box]
+			node.vm.hostname = machine[:hostname]
+			node.vm.network "private_network", ip: machine[:ip]
+			node.vm.provider "virtualbox" do |vb|
+				vb.customize ["modifyvm", :id, "--memory", machine[:ram], "--cpus", machine[:cpu]]
+			end
+		end
+	end
+end
