@@ -1,0 +1,13 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "gokulc/gkd"
+  config.vm.box_version = "1"
+  
+  config.ssh.username = "gokul"
+  config.ssh.password = "Virtual-12#"
+
+end
