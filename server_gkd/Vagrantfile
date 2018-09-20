@@ -1,0 +1,29 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+
+servers=[
+  {
+        :hostname => "gkd.gokul.com",
+        :box => "gokulc/gkd",
+        :cpu => 2,
+        :ram => 8192,
+  },
+]
+Vagrant.configure("2") do |config|
+        config.vm.box = "gokulc/gkd"
+        config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=755,fmode=755"], owner: "transmission", group: "transmission"
+        servers.each do |machine|
+                config.vm.define machine[:hostname] do |node|
+                        node.vm.box = machine[:box]
+                        node.vm.hostname = machine[:hostname]
+                        node.vm.network "public_network"
+                        node.vm.provision "shell",
+                                run: "always",
+                                inline: "sudo route add default gw 192.168.1.1 && sudo sh -c 'echo GATEWAY=192.168.1.1 >> /etc/sysconfig/network && echo GATEWAYDEV=enp0s8 >> /etc/sysconfig/network'"
+                        node.vm.provider "virtualbox" do |vb|
+                                vb.customize ["modifyvm", :id, "--memory", machine[:ram], "--cpus", machine[:cpu]]
+                        end
+                end
+        end
+end
